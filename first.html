@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" href="style2.css">
+    <meta charset="utf-8">
+    <script src="handlebars-v4.0.10.js"></script>
+</head>
+<body>
+    <h2>TO_DO List</h2>
+    
+    Filter by:
+    <select id='id_filter'>
+        <option attr_status="all">All</option>
+        <option attr_status="done">DONE</option>
+        <option attr_status="new">NEW</option>
+    </select>
+    <p></p>
+    <div style="float:left; width: 30%;">
+       <b>PROJECTS</b>
+       <p><button type="button" id="add_project" style="background: orange;">+ Add a project</button></p>
+       <div id="projects"></div>
+    </div>
+    <div class="todos" style="float:left;">
+        <b>TASKS</b>
+        <p>
+            <button type="button" id="add_button" style="background: green;">+ Add a task</button>
+            <a href="#" id="see_all_todos">See all tasks</a>
+        </p>
+        <div id="add_todo_cont" class="todos_add-new">
+            <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text">
+            <b>Project:</b>
+            <p id="projects-select" style="display: inline;"><p>
+            <button>Add</button> <button>Cancel</button>
+            <p class="todos_add-new_warning" id="add_todo_warning">No name. Please add a new one.</b>
+        </div>
+        <div id="all_todos"></div>
+    </div>
+
+    <script>
+        Handlebars.registerHelper('if_eq', function(a, b, opts) {
+            if (a == b) {
+                return opts.fn(this);
+            } else {
+                return opts.inverse(this);
+            }
+        });
+    </script>
+    <script id="list-todos-template" type="text/x-handlebars-template"> 
+        <ul id="todo_list">  
+        {{#each toDos}}
+        <li todo_id="{{id}}">
+            {{#if_eq status 'new'}}
+                <input type="checkbox">{{name}}
+                <button class="todos_li_delete">Delete</button>
+            {{/if_eq}}
+            {{#if_eq status 'done'}}
+                <input checked type="checkbox">{{name}}
+                <b style="color: green;">&nbsp;DONE!</b>
+            {{/if_eq}}
+        </li>
+        {{/each}}
+        </ul>
+    </script>
+    <script id="projects-list-template" type="text/x-handlebars-template"> 
+        <ul id="projects-list" class="projects">  
+        {{#each projects}}
+        <li project_id="{{id}}" class="projects_li">{{name}}</li>
+        {{/each}}
+        </ul>
+    </script>
+    <script id="projects-select_template" type="text/x-handlebars-template"> 
+        <select id='id_projects'>
+            {{#each projects}}
+            <option id="id_project_{{id}}">{{name}}</option>
+            {{/each}}
+        </select>
+    </script>
+    <script src="script3.js"></script>
+</body>
+</html>

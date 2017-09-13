@@ -1,0 +1,17 @@
+.projects {padding: 0;}
+.projects_li {display: block; 
+              padding: 10px; margin: 10px 10px 10px 0; 
+              cursor: pointer;
+              background: orange;}
+.projects_li.active {background: green;}
+.projects_li:hover {background: #38bc5b;}
+.projects_li:hover.active {background: green;}
+
+.todos {position: relative;}
+.todos_add-new { position: absolute;
+                top: 70px; left: 0;
+                visibility: hidden;
+                padding: 10px 10px 0 10px; 
+                background: orange;}
+.todos_add-new_warning {color: red; display: none;}
+.todos_li_delete {background: orange; margin: 2px 5px; cursor: pointer;}
