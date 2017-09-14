@@ -1,20 +1,12 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="style.css">
     <meta charset="utf-8">
     <script src="handlebars-v4.0.10.js"></script>
 </head>
 <body>
     <h2>TO_DO List</h2>
-    
-    Filter by:
-    <select id='id_filter'>
-        <option attr_status="all">All</option>
-        <option attr_status="done">DONE</option>
-        <option attr_status="new">NEW</option>
-    </select>
-    <p></p>
     <div style="float:left; width: 30%;">
        <b>PROJECTS</b>
        <p><button type="button" id="add_project" style="background: orange;">+ Add a project</button></p>
@@ -24,7 +16,6 @@
         <b>TASKS</b>
         <p>
             <button type="button" id="add_button" style="background: green;">+ Add a task</button>
-            <a href="#" id="see_all_todos">See all tasks</a>
         </p>
         <div id="add_todo_cont" class="todos_add-new">
             <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text">
@@ -63,8 +54,9 @@
     </script>
     <script id="projects-list-template" type="text/x-handlebars-template"> 
         <ul id="projects-list" class="projects">  
+        <li class="projects_li active" id="see_all_todos">All</li>
         {{#each projects}}
-        <li project_id="{{id}}" class="projects_li">{{name}}</li>
+        <li project_id="{{id}}" class="projects_li">{{name}} <b>({{number}})</b></li>
         {{/each}}
         </ul>
     </script>
@@ -75,6 +67,6 @@
             {{/each}}
         </select>
     </script>
-    <script src="script3.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

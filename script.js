@@ -1,6 +1,5 @@
 //create new task
 function addNewTodo() {
-    console.log('new');
     var toDo = {};
     toDos.push(toDo);
 
@@ -27,6 +26,14 @@ function addNewTodo() {
         toDo.name = newTodoAddInput.value;
         toDo.status = 'new';
         toDo.project_id = newTodoIdProject.split('_').slice(-1)[0];
+        var projectsLi = projectsCont.getElementsByTagName('li');
+        for (var i = 0; i < projects.length; i++) {
+            if (projects[i].id == toDo.project_id) {
+                projects[i].number += 1;
+                projectsLi[i+1].getElementsByTagName('b')[0].innerHTML = ' (' + projects[i].number + ')';
+                break;
+            }
+        }
         if (!toDo.name) {
             newTodoWarning.style.display = 'block';
         } else {
@@ -34,56 +41,56 @@ function addNewTodo() {
             toDoId++;
             newTodoCont.style.visibility = 'hidden';
 
-            var itemTodo = document.createElement('li');
-            var itemTodoCheckbox = document.createElement('input');
-            itemTodoCheckbox.type = "checkbox";
-            itemTodo.appendChild(itemTodoCheckbox);
-            itemTodo.appendChild(document.createTextNode("NEW!  " + toDo.name));
-            var itemTodoDelete = document.createElement('button');
-            itemTodoDelete.appendChild(document.createTextNode('Delete'));
-            itemTodoDelete.className = "todos_li_delete";
-            itemTodo.appendChild(itemTodoDelete);
-            listTodo.appendChild(itemTodo);
+            var selectedProjects = document.getElementsByClassName('projects_li active');
+            if (selectedProjects[0].id == 'see_all_todos' || 
+                (selectedProjects[0].getAttribute('project_id') == toDo.project_id)) {
+            
+                var itemTodo = document.createElement('li');
+                var itemTodoCheckbox = document.createElement('input');
+                itemTodoCheckbox.type = "checkbox";
+                itemTodo.appendChild(itemTodoCheckbox);
+                itemTodo.appendChild(document.createTextNode("NEW!  " + toDo.name));
+                var itemTodoDelete = document.createElement('button');
+                itemTodoDelete.appendChild(document.createTextNode('Delete'));
+                itemTodoDelete.className = "todos_li_delete";
+                itemTodo.appendChild(itemTodoDelete);
+                listTodo.appendChild(itemTodo);
 
-            itemTodoDelete.onclick = function() {
-                for (var k = 0; k < toDos.length; k++) {
-                    if (toDos[k].id == toDo.id) {
-                        toDos.splice(k, 1);
-                        break;
-                    };
-                }
-                listTodo.removeChild(this.parentElement);
-            };
+                itemTodoDelete.onclick = function() {
+                    for (var k = 0; k < toDos.length; k++) {
+                        if (toDos[k].id == toDo.id) {
+                            toDos.splice(k, 1);
+                            break;
+                        };
+                    }
+                    listTodo.removeChild(this.parentElement);
+                };
 
-            itemTodoCheckbox.onclick = function() {
-                var doneTodo = this.parentElement;
-                toDo.status = (toDo.status == 'new'? 'done': 'new');
+                itemTodoCheckbox.onclick = function() {
+                    var doneTodo = this.parentElement;
+                    toDo.status = (toDo.status == 'new'? 'done': 'new');
 
-                if (this.checked) {
-                    doneTodo.removeChild(doneTodo.getElementsByTagName('button')[0]);
-                    var doneText = document.createElement('b');
-                    doneText.appendChild(document.createTextNode(' DONE!'));
-                    doneText.style.color = 'green';
-                    doneTodo.appendChild(doneText);
-                } else {
-                    var itemTodoDelete = document.createElement('button');
-                    itemTodoDelete.appendChild(document.createTextNode('Delete'));
-                    doneTodo.appendChild(itemTodoDelete);
-                    itemTodoDelete.className = "todos_li_delete";
-                    itemTodoDelete.onclick = function() {
-                        toDos.pop(toDo);
-                        listTodo.removeChild(this.parentElement);
-                    };
-                    doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);
+                    if (this.checked) {
+                        doneTodo.removeChild(doneTodo.getElementsByTagName('button')[0]);
+                        var doneText = document.createElement('b');
+                        doneText.appendChild(document.createTextNode(' DONE!'));
+                        doneText.style.color = 'green';
+                        doneTodo.appendChild(doneText);
+                    } else {
+                        var itemTodoDelete = document.createElement('button');
+                        itemTodoDelete.appendChild(document.createTextNode('Delete'));
+                        doneTodo.appendChild(itemTodoDelete);
+                        itemTodoDelete.className = "todos_li_delete";
+                        itemTodoDelete.onclick = function() {
+                            toDos.pop(toDo);
+                            listTodo.removeChild(this.parentElement);
+                        };
+                        doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);
+                    }
                 }
             }
-
         }
     }
-
-
-
-    // toDos.length += 1;
 }
 
 function doneTodo(cont, todos, todos_project) {
@@ -158,10 +165,38 @@ function deleteTodo(cont, todos,todos_project) {
     }
 }
 
+function clickProjectLink() {
+    var projectLinks = projectsCont.getElementsByTagName('li');
+    for(var i = 0; i < projectLinks.length; i++) {
+        projectLinks[i].onclick = function(){
+            for(var i = 0; i < projectLinks.length; i++) {
+                projectLinks[i].className = 'projects_li';
+            }
+            this.className += ' active';
+            var projectId = this.getAttribute('project_id');
+            var projectTasks = [];
+            if (projectId) {
+                for (var k = 0; k < toDos.length; k++) {
+                    if (toDos[k].project_id == projectId) {
+                        projectTasks.push(toDos[k]);
+                    };
+                }
+            } else {
+                projectTasks = toDos;
+            }
+            var context = {title: "ALL Todos", toDos: projectTasks};
+            toDosAllCont.innerHTML = templateListTodos(context);
+            deleteTodo(toDosAllCont, toDos, projectTasks);
+            doneTodo(toDosAllCont, toDos, projectTasks);
+        };
+    }
+}
 
 
-var projects = [{'name': 'Routine', 'id': 0},
-                {'name': 'Books', 'id': 1}];
+
+var projects = [{'name': 'Routine', 'id': 0, 'number': 2},
+                {'name': 'Books', 'id': 1, 'number': 2}];
+var projectId = 2;
 var toDoId = 4;
 var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0}, 
             {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0}, 
@@ -175,41 +210,17 @@ var toDosAllCont = document.getElementById('all_todos');
 
 var source   = document.getElementById('list-todos-template').innerHTML;
 var templateListTodos = Handlebars.compile(source);
+toDosAllCont.innerHTML = templateListTodos({title: "ALL Todos", toDos: toDos});
 
 var source   = document.getElementById('projects-list-template').innerHTML;
 var template = Handlebars.compile(source);
-var context = {projects: projects};
-projectsCont.innerHTML = template(context);
+projectsCont.innerHTML = template({projects: projects});
 
 var source   = document.getElementById('projects-select_template').innerHTML;
 var template = Handlebars.compile(source);
-var context = {projects: projects};
-document.getElementById('projects-select').innerHTML = template(context);
+document.getElementById('projects-select').innerHTML = template({projects: projects});
 
-var context = {title: "ALL Todos", toDos: toDos};
-toDosAllCont.innerHTML = templateListTodos(context);
-
-
-var projectLinks = projectsCont.getElementsByTagName('li');
-for(var i = 0; i < projectLinks.length; i++) {
-    projectLinks[i].onclick = function(){
-        for(var i = 0; i < projectLinks.length; i++) {
-            projectLinks[i].className = 'projects_li';
-        }
-        this.className += ' active';
-        var projectId = this.getAttribute('project_id');
-        var projectTasks = [];
-        for (var k = 0; k < toDos.length; k++) {
-            if (toDos[k].project_id == projectId) {
-                projectTasks.push(toDos[k]);
-            };
-        }
-        var context = {title: "ALL Todos", toDos: projectTasks};
-        toDosAllCont.innerHTML = templateListTodos(context);
-        deleteTodo(toDosAllCont, toDos, projectTasks);
-        doneTodo(toDosAllCont, toDos, projectTasks);
-    };
-}
+clickProjectLink();
 
 var seeAllTodos = document.getElementById('see_all_todos');
 seeAllTodos.addEventListener('click', function(e) {
@@ -226,12 +237,27 @@ addNewTodoButton.onclick = addNewTodo;
 deleteTodo(toDosAllCont, toDos);
 doneTodo(toDosAllCont, toDos);
 
-//Filter
-var filterMenu = document.getElementById('id_filter');
-filterMenu.onclick = function() {
-    // show all todos that DONE
-    if (filterMenu.selectedIndex == 1) {
-        console.log(toDosDone);
+var addNewProjectButton = document.getElementById('add_project');
+addNewProjectButton.onclick = function() {
+    var projectName = prompt("Please enter the name of a new project.");
+    if (projectName != "" || projectName != null) {
+        var newProject = {};
+        newProject.name = projectName;
+        newProject.id = projectId;
+        newProject.number = 0;
+        projectId++;
+        projects.push(newProject);
+
+        var projectsList = projectsCont.getElementsByTagName('ul')[0];
+        var itemProject = document.createElement('li');
+        itemProject.setAttribute("project_id", newProject.id);
+        itemProject.setAttribute("class", "projects_li");
+        itemProject.appendChild(document.createTextNode(newProject.name));
+        var itemProjectNumber = document.createElement('b');
+        itemProjectNumber.appendChild(document.createTextNode(' (' + newProject.number + ')'));
+        itemProject.appendChild(itemProjectNumber);
+        projectsList.appendChild(itemProject);
+        clickProjectLink(); 
     }
 }
 
