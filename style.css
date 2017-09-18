@@ -8,10 +8,42 @@
 .projects_li:hover.active {background: green;}
 
 .todos {position: relative;}
-.todos_add-new { position: absolute;
+.todos_add-new {position: absolute;
                 top: 70px; left: 0;
                 visibility: hidden;
                 padding: 10px 10px 0 10px; 
-                background: orange;}
-.todos_add-new_warning {color: red; display: none;}
-.todos_li_delete {background: orange; margin: 2px 5px; cursor: pointer;}
+                background: orange; z-index: 100;}
+.todos_add-new_warning {color: red; 
+                        display: none;}
+.todos_list {position: relative;}
+.todos_list_move {display: none;
+                  position: absolute; 
+                  top: 0; left: 0;
+                  width: 250px; height: 10                                                                                                                                                                                                                                                                                                                                                                                                                                                  0px;
+                  padding: 10px; 
+                  background: orange;}
+
+
+.todos_li_delete {background: orange; 
+                margin: 2px 5px; 
+                cursor: pointer;}
+.todo_li_more {display: inline;
+               position: relative;}
+.todo_li_more_link {cursor: pointer;
+                    font-size: 20px;}
+.todo_li_more_options {display: none;
+                       z-index: 10;
+                       position: absolute;
+                       top: 0; left: 0;
+                       width: 200px;
+                       padding: 5px 10px;
+                       background: orange;}
+.todo_li_more_options_list {padding: 0;
+                            list-style-type: none;}
+.todo_li_more_options_item {padding: 5px 0;
+                            font-weight: bold;
+                            cursor: pointer;}
+.todo_li_more_options_item:hover {color: green;}
+
+.table_week {width: 80%;}
+.table_week_day {background: green;}

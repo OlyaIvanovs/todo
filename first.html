@@ -15,7 +15,9 @@
     <div class="todos" style="float:left;">
         <b>TASKS</b>
         <p>
-            <button type="button" id="add_button" style="background: green;">+ Add a task</button>
+            <button type="button" id="add_button" style="background: green;">
+                + Add a task
+            </button>
         </p>
         <div id="add_todo_cont" class="todos_add-new">
             <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text">
@@ -24,8 +26,33 @@
             <button>Add</button> <button>Cancel</button>
             <p class="todos_add-new_warning" id="add_todo_warning">No name. Please add a new one.</b>
         </div>
-        <div id="all_todos"></div>
+        <div class="todos_list">
+            <div id="all_todos"></div>
+            <div class="todos_list_move" id="todo_move">
+                <b>SelectProject:</b><br>
+                <p id="projects-select-moving"><p>
+                <button>Move</button> <button>Cancel</button>
+            </div>
+        </div>
     </div>
+
+    <div style="clear: left;"></div>
+    <h3>YOUR WEEK</h3>
+    <h3>TODAY</h3>
+    <table class="table_week">
+    <tr>
+        <td class="table_week_day">Monday</td>
+        <td class="table_week_day">Tuesday</td>
+        <td class="table_week_day">Wendsday</td>
+        <td class="table_week_day">Thursday</td>
+        <td class="table_week_day">Friday</td>
+        <td class="table_week_day">Saturday</td>
+        <td class="table_week_day">Sunday</td>
+    </tr>
+    <tr>
+        <td>
+    <tr>
+    </table>
 
     <script>
         Handlebars.registerHelper('if_eq', function(a, b, opts) {
@@ -43,6 +70,19 @@
             {{#if_eq status 'new'}}
                 <input type="checkbox">{{name}}
                 <button class="todos_li_delete">Delete</button>
+                <div class="todo_li_more">
+                    <b class="todo_li_more_link">...</b>
+                    <div class="todo_li_more_options">
+                        <ul class="todo_li_more_options_list">
+                            <li class="todo_li_more_options_item" id="todo_edit_{{id}}">
+                                Edit task
+                            </li>
+                            <li class="todo_li_more_options_item" id="todo_move_{{id}}">
+                                Move to another project
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             {{/if_eq}}
             {{#if_eq status 'done'}}
                 <input checked type="checkbox">{{name}}

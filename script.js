@@ -1,3 +1,109 @@
+document.onclick = hideBlocks;
+
+function hideBlocks() {
+    for (var k = 0; k < todoOptionsBlocks.length; k++) {
+        if (todoOptionsBlocks[k].hasAttribute('show')) {
+            todoOptionsBlocks[k].removeAttribute('show');
+            break;
+        }
+        if (!todoOptionsBlocks[k].hasAttribute('show') &&
+            todoOptionsBlocks[k].style.display == 'block') {
+            todoOptionsBlocks[k].style.display = 'none';
+        }
+    }
+}
+
+// to increase with sign = 1 or to decrease with sign = -1
+function changeNumberProjects(pr_id, sign) {
+    for (var i = 0; i < projects.length; i++) {
+        if (projects[i].id == pr_id) {
+            if (sign == 1) {
+                projects[i].number += 1;
+            } else if (sign == -1) {
+                projects[i].number -= 1;
+            }
+            projectsLi[i+1].getElementsByTagName('b')[0].innerHTML = ' (' + projects[i].number + ')';
+            break;
+        }
+    }
+}
+
+function showMoreLinks(todoMoreLinks) {
+    for (var k = 0; k < todoMoreLinks.length; k++) {
+        todoMoreLinks[k].onclick = function() {
+            var options = this.parentElement.getElementsByClassName('todo_li_more_options')[0];
+            options.style.display = 'block';
+            options.setAttribute('show', '');
+        }
+    }
+}
+
+function changeTodo(optionsBlock, showAll=false) {
+    var todoOptionsParent = optionsBlock.parentElement;
+    while (todoOptionsParent.tagName !== "HTML") {
+        if (todoOptionsParent.tagName === "LI") {
+            break;
+        } 
+        todoOptionsParent = todoOptionsParent.parentNode;
+    }
+    var todoId = todoOptionsParent.getAttribute('todo_id');
+    for (var l=0; l<toDos.length; l++) {
+        if (toDos[l].id == todoId) {
+            var todo = toDos[l];
+        }
+    }
+    var todoOptions = optionsBlock.getElementsByTagName('li');
+    for (var i = 0; i < todoOptions.length; i++) {
+        var optionId = todoOptions[i].id;
+        if (optionId.startsWith("todo_edit_")) {
+            todoOptions[i].onclick = function() {
+                console.log("edit");
+            }
+        }
+        if (optionId.startsWith("todo_move_")) {
+            todoOptions[i].onclick = function() {
+                var todoOptionsParent = this.parentElement;
+                while (todoOptionsParent.tagName !== "HTML") {
+                    if (todoOptionsParent.hasAttribute('todo_id')) {
+                        var todoItem = todoOptionsParent;
+                        var todoId = todoOptionsParent.getAttribute('todo_id');
+                        for (var n = 0; n < toDos.length; n++) {
+                            if (toDos[n].id == todoId) {
+                                var todo = toDos[n];
+                            }
+                        }
+                        break;
+                    } 
+                    todoOptionsParent = todoOptionsParent.parentNode;
+                }
+                var todoMoveMenu = document.getElementById('todo_move');  
+                var todoMoveMenuButtons = todoMoveMenu.getElementsByTagName('button');
+                var todoMoveMenuSelect = todoMoveMenu.getElementsByTagName('select')[0];
+                todoMoveMenuButtonMove = todoMoveMenuButtons[0];    
+                todoMoveMenuButtonCancel = todoMoveMenuButtons[1];
+                todoMoveMenu.style.display = 'block'; 
+                var previousProjectId = todo.project_id;    
+                todoMoveMenuButtonMove.onclick = function() {
+                    var newProjectIdStr = todoMoveMenuSelect[todoMoveMenuSelect.selectedIndex].id;
+                    var newProjectId = newProjectIdStr.split('_').slice(-1)[0];
+                    if (newProjectId != previousProjectId) {;
+                        todo.project_id = newProjectId;
+                        changeNumberProjects(newProjectId, 1);
+                        changeNumberProjects(previousProjectId, -1);
+                        if (!showAll) document.getElementById('todo_list').removeChild(todoItem);
+
+                    }
+                    todoMoveMenu.style.display = 'none';
+                } 
+                todoMoveMenuButtonCancel.onclick = function() {
+                    todoMoveMenu.style.display = 'none';
+                }
+            }
+        }
+    }
+}
+
+
 //create new task
 function addNewTodo() {
     var toDo = {};
@@ -26,14 +132,7 @@ function addNewTodo() {
         toDo.name = newTodoAddInput.value;
         toDo.status = 'new';
         toDo.project_id = newTodoIdProject.split('_').slice(-1)[0];
-        var projectsLi = projectsCont.getElementsByTagName('li');
-        for (var i = 0; i < projects.length; i++) {
-            if (projects[i].id == toDo.project_id) {
-                projects[i].number += 1;
-                projectsLi[i+1].getElementsByTagName('b')[0].innerHTML = ' (' + projects[i].number + ')';
-                break;
-            }
-        }
+        changeNumberProjects(toDo.project_id, 1);
         if (!toDo.name) {
             newTodoWarning.style.display = 'block';
         } else {
@@ -188,6 +287,12 @@ function clickProjectLink() {
             toDosAllCont.innerHTML = templateListTodos(context);
             deleteTodo(toDosAllCont, toDos, projectTasks);
             doneTodo(toDosAllCont, toDos, projectTasks);
+            var todoMoreLinks = toDosAllCont.getElementsByClassName('todo_li_more_link');
+            showMoreLinks(todoMoreLinks)
+            var todoOptionsBlocks = toDosAllCont.getElementsByClassName('todo_li_more_options');
+            for (var k = 0; k < todoOptionsBlocks.length; k++) {
+                changeTodo(todoOptionsBlocks[k]);
+            }
         };
     }
 }
@@ -219,6 +324,10 @@ projectsCont.innerHTML = template({projects: projects});
 var source   = document.getElementById('projects-select_template').innerHTML;
 var template = Handlebars.compile(source);
 document.getElementById('projects-select').innerHTML = template({projects: projects});
+document.getElementById('projects-select-moving').innerHTML = template({projects: projects});
+
+var projectsLi = projectsCont.getElementsByTagName('li');
+
 
 clickProjectLink();
 
@@ -227,15 +336,28 @@ seeAllTodos.addEventListener('click', function(e) {
     e.preventDefault();
     var context = {title: "ALL Todos", toDos: toDos};
     toDosAllCont.innerHTML = templateListTodos(context);
+    var todoMoreLinks = document.getElementsByClassName('todo_li_more_link');
+    var todoOptionsBlocks = document.getElementsByClassName('todo_li_more_options');
     deleteTodo(toDosAllCont, toDos);
     doneTodo(toDosAllCont, toDos);
+    showMoreLinks(todoMoreLinks);
+    for (var k = 0; k < todoOptionsBlocks.length; k++) {
+        changeTodo(todoOptionsBlocks[k], true);
+    }
 })
 
 
 var addNewTodoButton = document.getElementById('add_button');
+var todoMoreLinks = document.getElementsByClassName('todo_li_more_link');
+var todoOptionsBlocks = document.getElementsByClassName('todo_li_more_options');
 addNewTodoButton.onclick = addNewTodo;
 deleteTodo(toDosAllCont, toDos);
 doneTodo(toDosAllCont, toDos);
+showMoreLinks(todoMoreLinks);
+for (var k = 0; k < todoOptionsBlocks.length; k++) {
+    changeTodo(todoOptionsBlocks[k], true);
+}
+
 
 var addNewProjectButton = document.getElementById('add_project');
 addNewProjectButton.onclick = function() {
@@ -260,5 +382,4 @@ addNewProjectButton.onclick = function() {
         clickProjectLink(); 
     }
 }
-
 
