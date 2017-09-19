@@ -159,6 +159,7 @@ function addNewTodo() {
                     for (var k = 0; k < toDos.length; k++) {
                         if (toDos[k].id == toDo.id) {
                             toDos.splice(k, 1);
+                            changeNumberProjects(toDo.project_id, -1);
                             break;
                         };
                     }
@@ -183,7 +184,9 @@ function addNewTodo() {
                         itemTodoDelete.onclick = function() {
                             toDos.pop(toDo);
                             listTodo.removeChild(this.parentElement);
+                            changeNumberProjects(toDo.project_id, -1);
                         };
+                        console.log(doneTodo.getElementsByTagName('b')[0]);
                         doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);
                     }
                 }
@@ -231,7 +234,8 @@ function doneTodo(cont, todos, todos_project) {
                     }
                     listTodo.removeChild(this.parentElement);
                 };
-                doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);
+                var doneSign = doneTodo.getElementsByTagName('b')[1];
+                doneTodo.removeChild(doneSign);
             }
         }
     }
@@ -255,6 +259,7 @@ function deleteTodo(cont, todos,todos_project) {
                     };
                     if (todos[k].id == todoId) {
                         todos.splice(k, 1);
+                        changeNumberProjects(todos[k].project_id, -1);
                         break;
                     };
                 }
@@ -312,6 +317,7 @@ var toDosDone = [{'name': 'Thing 3','status': 'done', 'id': 2, 'project_id': 1}]
 var projectsCont= document.getElementById('projects');
 var toDosDoneCont = document.getElementById('done_todos');
 var toDosAllCont = document.getElementById('all_todos');
+var projectSelector = document.getElementById('projects-select');
 
 var source   = document.getElementById('list-todos-template').innerHTML;
 var templateListTodos = Handlebars.compile(source);
@@ -323,11 +329,10 @@ projectsCont.innerHTML = template({projects: projects});
 
 var source   = document.getElementById('projects-select_template').innerHTML;
 var template = Handlebars.compile(source);
-document.getElementById('projects-select').innerHTML = template({projects: projects});
+projectSelector.innerHTML = template({projects: projects});
 document.getElementById('projects-select-moving').innerHTML = template({projects: projects});
 
 var projectsLi = projectsCont.getElementsByTagName('li');
-
 
 clickProjectLink();
 
@@ -379,6 +384,7 @@ addNewProjectButton.onclick = function() {
         itemProjectNumber.appendChild(document.createTextNode(' (' + newProject.number + ')'));
         itemProject.appendChild(itemProjectNumber);
         projectsList.appendChild(itemProject);
+        projectSelector.innerHTML = template({projects: projects});
         clickProjectLink(); 
     }
 }

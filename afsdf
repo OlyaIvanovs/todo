@@ -1,0 +1,70 @@
+[1mdiff --git a/script.js b/script.js[m
+[1mindex 7b4a64e..0b545eb 100644[m
+[1m--- a/script.js[m
+[1m+++ b/script.js[m
+[36m@@ -159,6 +159,7 @@[m [mfunction addNewTodo() {[m
+                     for (var k = 0; k < toDos.length; k++) {[m
+                         if (toDos[k].id == toDo.id) {[m
+                             toDos.splice(k, 1);[m
+[32m+[m[32m                            changeNumberProjects(toDo.project_id, -1);[m
+                             break;[m
+                         };[m
+                     }[m
+[36m@@ -183,7 +184,9 @@[m [mfunction addNewTodo() {[m
+                         itemTodoDelete.onclick = function() {[m
+                             toDos.pop(toDo);[m
+                             listTodo.removeChild(this.parentElement);[m
+[32m+[m[32m                            changeNumberProjects(toDo.project_id, -1);[m
+                         };[m
+[32m+[m[32m                        console.log(doneTodo.getElementsByTagName('b')[0]);[m
+                         doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);[m
+                     }[m
+                 }[m
+[36m@@ -231,7 +234,8 @@[m [mfunction doneTodo(cont, todos, todos_project) {[m
+                     }[m
+                     listTodo.removeChild(this.parentElement);[m
+                 };[m
+[31m-                doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);[m
+[32m+[m[32m                var doneSign = doneTodo.getElementsByTagName('b')[1];[m
+[32m+[m[32m                doneTodo.removeChild(doneSign);[m
+             }[m
+         }[m
+     }[m
+[36m@@ -255,6 +259,7 @@[m [mfunction deleteTodo(cont, todos,todos_project) {[m
+                     };[m
+                     if (todos[k].id == todoId) {[m
+                         todos.splice(k, 1);[m
+[32m+[m[32m                        changeNumberProjects(todos[k].project_id, -1);[m
+                         break;[m
+                     };[m
+                 }[m
+[36m@@ -312,6 +317,7 @@[m [mvar toDosDone = [{'name': 'Thing 3','status': 'done', 'id': 2, 'project_id': 1}][m
+ var projectsCont= document.getElementById('projects');[m
+ var toDosDoneCont = document.getElementById('done_todos');[m
+ var toDosAllCont = document.getElementById('all_todos');[m
+[32m+[m[32mvar projectSelector = document.getElementById('projects-select');[m
+ [m
+ var source   = document.getElementById('list-todos-template').innerHTML;[m
+ var templateListTodos = Handlebars.compile(source);[m
+[36m@@ -323,12 +329,11 @@[m [mprojectsCont.innerHTML = template({projects: projects});[m
+ [m
+ var source   = document.getElementById('projects-select_template').innerHTML;[m
+ var template = Handlebars.compile(source);[m
+[31m-document.getElementById('projects-select').innerHTML = template({projects: projects});[m
+[32m+[m[32mprojectSelector.innerHTML = template({projects: projects});[m
+ document.getElementById('projects-select-moving').innerHTML = template({projects: projects});[m
+ [m
+ var projectsLi = projectsCont.getElementsByTagName('li');[m
+ [m
+[31m-[m
+ clickProjectLink();[m
+ [m
+ var seeAllTodos = document.getElementById('see_all_todos');[m
+[36m@@ -379,6 +384,7 @@[m [maddNewProjectButton.onclick = function() {[m
+         itemProjectNumber.appendChild(document.createTextNode(' (' + newProject.number + ')'));[m
+         itemProject.appendChild(itemProjectNumber);[m
+         projectsList.appendChild(itemProject);[m
+[32m+[m[32m        projectSelector.innerHTML = template({projects: projects});[m
+         clickProjectLink(); [m
+     }[m
+ }[m
