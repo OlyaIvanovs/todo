@@ -33,6 +33,11 @@
                 <p id="projects-select-moving"><p>
                 <button>Move</button> <button>Cancel</button>
             </div>
+            <div class="todos_list_move" id="todo_edit">
+                <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text">
+                <br><br>
+                <button>Edit</button> <button>Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -68,7 +73,8 @@
         {{#each toDos}}
         <li todo_id="{{id}}">
             {{#if_eq status 'new'}}
-                <input type="checkbox">{{name}}
+                <input type="checkbox">
+                <p style="display: inline;">{{name}}</p>
                 <button class="todos_li_delete">Delete</button>
                 <div class="todo_li_more">
                     <b class="todo_li_more_link">...</b>
@@ -96,7 +102,9 @@
         <ul id="projects-list" class="projects">  
         <li class="projects_li active" id="see_all_todos">All</li>
         {{#each projects}}
-        <li project_id="{{id}}" class="projects_li">{{name}} <b>({{number}})</b></li>
+        <li project_id="{{id}}" class="projects_li">
+            {{name}} <b>({{number}})</b>
+        </li>
         {{/each}}
         </ul>
     </script>

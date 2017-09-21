@@ -57,7 +57,40 @@ function changeTodo(optionsBlock, showAll=false) {
         var optionId = todoOptions[i].id;
         if (optionId.startsWith("todo_edit_")) {
             todoOptions[i].onclick = function() {
-                console.log("edit");
+                var todoOptionsParent = this.parentElement;
+                while (todoOptionsParent.tagName !== "HTML") {
+                    if (todoOptionsParent.hasAttribute('todo_id')) {
+                        var todoItem = todoOptionsParent;
+                        var todoId = todoOptionsParent.getAttribute('todo_id');
+                        for (var n = 0; n < toDos.length; n++) {
+                            if (toDos[n].id == todoId) {
+                                var todo = toDos[n];
+                            }
+                        }
+                        break;
+                    } 
+                    todoOptionsParent = todoOptionsParent.parentNode;
+                }
+                var todoEditMenu = document.getElementById('todo_edit');  
+                var todoEditMenuButtons = todoEditMenu.getElementsByTagName('button');
+                todoEditMenuButtonEdit = todoEditMenuButtons[0];    
+                todoEditMenuButtonCancel = todoEditMenuButtons[1];
+                todoEditMenuInput = todoEditMenu.getElementsByTagName('input')[0];
+                todoEditMenuInput.value = '';
+                todoEditMenuInput.setAttribute('placeholder', todo.name)
+
+                todoEditMenu.style.display = 'block';
+
+                todoEditMenuButtonEdit.onclick = function() {
+                    todo.name = todoEditMenuInput.value;
+                    todoItem.getElementsByTagName('p')[0].innerHTML = todo.name;
+                    todoEditMenu.style.display = 'none';
+                }
+                todoEditMenuButtonCancel.onclick = function() {
+                    todoEditMenu.style.display = 'none';
+                }
+
+
             }
         }
         if (optionId.startsWith("todo_move_")) {
