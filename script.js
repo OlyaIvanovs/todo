@@ -145,6 +145,7 @@ function addNewTodo() {
                 (selectedProjects[0].getAttribute('project_id') == toDo.project_id)) {
             
                 var itemTodo = document.createElement('li');
+                itemTodo.setAttribute("todo_id", toDo.id);
                 var itemTodoCheckbox = document.createElement('input');
                 itemTodoCheckbox.type = "checkbox";
                 itemTodo.appendChild(itemTodoCheckbox);
@@ -153,7 +154,17 @@ function addNewTodo() {
                 itemTodoDelete.appendChild(document.createTextNode('Delete'));
                 itemTodoDelete.className = "todos_li_delete";
                 itemTodo.appendChild(itemTodoDelete);
+                var itemTodoMore = document.createElement('div');
+                itemTodoMore.className = "todo_li_more";
+                itemTodo.appendChild(itemTodoMore);
                 listTodo.appendChild(itemTodo);
+
+                var source   = document.getElementById('todo_more_template').innerHTML;
+                var template = Handlebars.compile(source);
+                itemTodoMore.innerHTML = template();
+
+                showMoreLinks(itemTodoMore.getElementsByClassName('todo_li_more_link'));
+                changeTodo(itemTodo.getElementsByClassName('todo_li_more_options')[0]);
 
                 itemTodoDelete.onclick = function() {
                     for (var k = 0; k < toDos.length; k++) {
@@ -186,7 +197,6 @@ function addNewTodo() {
                             listTodo.removeChild(this.parentElement);
                             changeNumberProjects(toDo.project_id, -1);
                         };
-                        console.log(doneTodo.getElementsByTagName('b')[0]);
                         doneTodo.removeChild(doneTodo.getElementsByTagName('b')[0]);
                     }
                 }
@@ -293,7 +303,7 @@ function clickProjectLink() {
             deleteTodo(toDosAllCont, toDos, projectTasks);
             doneTodo(toDosAllCont, toDos, projectTasks);
             var todoMoreLinks = toDosAllCont.getElementsByClassName('todo_li_more_link');
-            showMoreLinks(todoMoreLinks)
+            showMoreLinks(todoMoreLinks);
             var todoOptionsBlocks = toDosAllCont.getElementsByClassName('todo_li_more_options');
             for (var k = 0; k < todoOptionsBlocks.length; k++) {
                 changeTodo(todoOptionsBlocks[k]);

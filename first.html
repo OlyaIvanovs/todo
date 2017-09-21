@@ -107,6 +107,19 @@
             {{/each}}
         </select>
     </script>
+    <script id="todo_more_template" type="text/x-handlebars-template">
+        <b class="todo_li_more_link">...</b>
+        <div class="todo_li_more_options">
+            <ul class="todo_li_more_options_list">
+                <li class="todo_li_more_options_item" id="todo_edit_{{id}}">
+                    Edit task
+                </li>
+                <li class="todo_li_more_options_item" id="todo_move_{{id}}">
+                    Move to another project
+                </li>
+            </ul>
+        </div>
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
