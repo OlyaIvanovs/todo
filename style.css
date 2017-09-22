@@ -45,5 +45,14 @@
                             cursor: pointer;}
 .todo_li_more_options_item:hover {color: green;}
 
+
+.week_title {display: inline-block; 
+            width: 33%;
+            cursor: pointer;}
+.week_title:hover, .week_title.active {color: green;}
 .table_week {width: 80%;}
-.table_week_day {background: green;}
+.table_week_day {background: green;
+                padding: 5px;}
+.table_week_day.active {background: orange;}
+.table_week_day.before {background: #c6ce9f;}
+.table_week_td {border: 1px solid black; height: 150px;}

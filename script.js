@@ -432,3 +432,55 @@ addNewProjectButton.onclick = function() {
     }
 }
 
+
+//Date
+function changeWeekTitles() {
+    for (var k = 0; k < weekDays.length; k++) {
+        var weekDay = weekDays[k];
+        var day = new Date();
+        day.setDate(day.getDate()- todayWeekDay + k + weekDiff*7);
+        var dayMonth = day.getMonth();
+        var dayDay = day.getDate();
+        weekDay.getElementsByTagName('b')[0].textContent = dayDay + '.' + monthsNumArray[dayMonth];
+        if ((k < (todayWeekDay-1) && (weekDiff == 0)) || (weekDiff < 0)) {
+            weekDay.className = 'table_week_day before';
+        } else if ((k > (todayWeekDay - 1) && (weekDiff == 0)) || (weekDiff > 0)) {
+            weekDay.className = 'table_week_day after';
+        } else {
+            weekDay.className = 'table_week_day active';
+        }
+    }
+}
+
+
+var monthsArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var monthsNumArray = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+var todayDateCont = document.getElementById('date_today');
+var weekDays = document.getElementsByClassName('table_week_day');
+var prevWeek = document.getElementById("prev_week");
+var nextWeek = document.getElementById("next_week");
+var nextWeek = document.getElementById("cur_week");
+var today = new Date();
+var todayMonth = today.getMonth();
+var todayYear = today.getFullYear();
+var todayDay = today.getDate();
+var todayWeekDay = today.getDay();
+var weekDiff = 0;
+todayDateCont.appendChild(
+    document.createTextNode(todayDay + ' ' + monthsArray[todayMonth] + ' ' + todayYear));
+changeWeekTitles();
+
+prev_week.onclick = function() {
+    weekDiff -= 1;
+    changeWeekTitles();
+}
+
+next_week.onclick = function() {
+    weekDiff += 1;
+    changeWeekTitles();
+}
+
+cur_week.onclick = function() {
+    weekDiff = 0;
+    changeWeekTitles();
+}
