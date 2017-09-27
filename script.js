@@ -136,7 +136,6 @@ function changeTodo(optionsBlock, showAll=false) {
     }
 }
 
-
 //create new task
 function addNewTodo() {
     var toDo = {};
@@ -351,9 +350,10 @@ var projects = [{'name': 'Routine', 'id': 0, 'number': 2},
                 {'name': 'Books', 'id': 1, 'number': 2}];
 var projectId = 2;
 var toDoId = 4;
-var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0}, 
-            {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0}, 
-            {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1},
+var todosdate = new Date('2017-09-26');
+var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate}, 
+            {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0, 'date': todosdate}, 
+            {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1, 'date': todosdate},
             {'name': 'Thing 111','status': 'new', 'id': 3, 'project_id': 1}];
 var toDosDone = [{'name': 'Thing 3','status': 'done', 'id': 2, 'project_id': 1}]; 
 
@@ -436,19 +436,30 @@ addNewProjectButton.onclick = function() {
 //Date
 function changeWeekTitles() {
     for (var k = 0; k < weekDays.length; k++) {
-        var weekDay = weekDays[k];
+        var weekDay = weekDays[k].getElementsByClassName('table_week_day')[0];
         var day = new Date();
         day.setDate(day.getDate()- todayWeekDay + k + weekDiff*7);
         var dayMonth = day.getMonth();
         var dayDay = day.getDate();
         weekDay.getElementsByTagName('b')[0].textContent = dayDay + '.' + monthsNumArray[dayMonth];
-        if ((k < (todayWeekDay-1) && (weekDiff == 0)) || (weekDiff < 0)) {
+        if (((k < todayWeekDay) && (weekDiff == 0)) || (weekDiff < 0)) {
             weekDay.className = 'table_week_day before';
-        } else if ((k > (todayWeekDay - 1) && (weekDiff == 0)) || (weekDiff > 0)) {
+        } else if (((k > todayWeekDay) && (weekDiff == 0)) || (weekDiff > 0)) {
             weekDay.className = 'table_week_day after';
         } else {
             weekDay.className = 'table_week_day active';
         }
+
+        var weekDayTodos = [];
+        var weekDayTodosCont = weekDays[k].getElementsByClassName('table_week_todos')[0];
+        for (var i = 0; i < toDos.length; i++) {
+            if (toDos[i].date && (toDos[i].date.getDate() == day.getDate())) {
+                weekDayTodos.push(toDos[i]);
+            };
+        }
+        var source   = document.getElementById('weekday_todos_template').innerHTML;
+        var templateWeekdayTodos = Handlebars.compile(source);
+        weekDayTodosCont.innerHTML = templateWeekdayTodos({toDos: weekDayTodos});
     }
 }
 
@@ -456,7 +467,7 @@ function changeWeekTitles() {
 var monthsArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var monthsNumArray = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 var todayDateCont = document.getElementById('date_today');
-var weekDays = document.getElementsByClassName('table_week_day');
+var weekDays = document.getElementsByClassName('table_week_td');
 var prevWeek = document.getElementById("prev_week");
 var nextWeek = document.getElementById("next_week");
 var nextWeek = document.getElementById("cur_week");
@@ -464,7 +475,8 @@ var today = new Date();
 var todayMonth = today.getMonth();
 var todayYear = today.getFullYear();
 var todayDay = today.getDate();
-var todayWeekDay = today.getDay();
+var todayWeekDay = today.getDay() - 1;
+if (todayWeekDay == -1) {todayWeekDay = 6};
 var weekDiff = 0;
 todayDateCont.appendChild(
     document.createTextNode(todayDay + ' ' + monthsArray[todayMonth] + ' ' + todayYear));
@@ -484,3 +496,52 @@ cur_week.onclick = function() {
     weekDiff = 0;
     changeWeekTitles();
 }
+
+
+var weekDayConts = document.getElementsByClassName('table_week_td');
+for (var k = 0; k < weekDayConts.length; k++) {
+    weekDayConts[k].onclick = function() {
+        alert(this.getElementsByClassName("table_week_day_name")[0].textContent);
+    }
+}
+
+
+var dragableEl = document.getElementById('dragable');
+dragableEl.onmousedown = function(e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    this.style.position = 'absolute';
+    this.style.zIndex = '1000';
+
+    document.onmousemove = function(ev) {
+        dragableEl.style.left = ev.pageX + 'px';
+        dragableEl.style.top = ev.pageY + 'px';
+    }
+}
+
+document.onmouseup = function(e) {
+    document.onmousedown = null;
+    document.onmousemove = null;
+}
+
+var listTodo = document.getElementById('todo_list');
+var listTodoItems = listTodo.getElementsByTagName('li');
+for (k = 0; k < listTodoItems.length; k++) {
+    listTodoItems[k].onmousedown = function() {
+        var listTodoItem = this;
+        this.style.position = 'absolute';
+        this.style.zIndex = '1000';
+
+        document.onmousemove = function(ev) {
+            listTodoItem.style.left = ev.pageX + 'px';
+            listTodoItem.style.top = ev.pageY + 'px';
+        }
+    }
+}
+
+
+var source   = document.getElementById('weekday_todos_template').innerHTML;
+var templateWeekdayTodos = Handlebars.compile(source);
+
+// Добавлять дату к таску(новая задача, редактирование, перенос)
+// Сравнивать даты(число, год, день)

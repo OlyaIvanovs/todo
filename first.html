@@ -6,6 +6,7 @@
     <script src="handlebars-v4.0.10.js"></script>
 </head>
 <body>
+    <div id="dragable" style="width: 30px; height: 30px; background: red;"></div>
     <h2>TO_DO List</h2>
     <div style="float:left; width: 30%;">
        <b>PROJECTS</b>
@@ -20,7 +21,7 @@
             </button>
         </p>
         <div id="add_todo_cont" class="todos_add-new">
-            <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text">
+            <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text"><br><br>
             <b>Project:</b>
             <p id="projects-select" style="display: inline;"><p>
             <button>Add</button> <button>Cancel</button>
@@ -48,23 +49,49 @@
     <h3>TODAY: <b id="date_today"></b></h3>
     <table class="table_week">
     <tr>
-        <td class="table_week_day">Monday (<b></b>)</td>
-        <td class="table_week_day">Tuesday (<b></b>)</td>
-        <td class="table_week_day">Wendsday (<b></b>)</td>
-        <td class="table_week_day">Thursday (<b></b>)</td>
-        <td class="table_week_day">Friday (<b></b>)</td>
-        <td class="table_week_day">Saturday (<b></b>)</td>
-        <td class="table_week_day">Sunday (<b></b>)</td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Monday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Tuesday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Wednesday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Thursday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Friday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Saturday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
+        <td class="table_week_td">
+            <div class="table_week_day">
+                <p class="table_week_day_name">Sunday(<b></b>)
+            </div>
+            <div class="table_week_todos"></div>
+        </td>
     </tr>
-    <tr>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-        <td class="table_week_td"></td>
-    <tr>
     </table>
 
     <script>
@@ -77,13 +104,13 @@
         });
     </script>
     <script id="list-todos-template" type="text/x-handlebars-template"> 
-        <ul id="todo_list">  
+        <ul id="todo_list" class="todos_list_ul">  
         {{#each toDos}}
         <li todo_id="{{id}}">
             {{#if_eq status 'new'}}
                 <input type="checkbox">
-                <p style="display: inline;">{{name}}</p>
-                <button class="todos_li_delete">Delete</button>
+                <p class="todos_li_name">{{name}}</p>
+                <button class="todos_li_delete">&#10008;</button>
                 <div class="todo_li_more">
                     <b class="todo_li_more_link">...</b>
                     <div class="todo_li_more_options">
@@ -97,6 +124,9 @@
                         </ul>
                     </div>
                 </div>
+                {{#if date}}
+                <p class="todos_li_time">{{date}}</p>
+                {{/if}}
             {{/if_eq}}
             {{#if_eq status 'done'}}
                 <input checked type="checkbox">{{name}}
@@ -135,6 +165,13 @@
                 </li>
             </ul>
         </div>
+    </script>
+    s<script id="weekday_todos_template" type="text/x-handlebars-template">
+        <ul class="table_week_todos_list">
+            {{#each toDos}}
+            <li>{{name}}  &#9658;{{project}}</li>
+            {{/each}}
+        </ul>
     </script>
     <script src="script.js"></script>
 </body>

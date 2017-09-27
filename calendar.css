@@ -1,0 +1,28 @@
+.calendar {width: 210px; height: 250px;}
+.calendar_month {
+    padding: 5px; 
+    background: #4286f4;
+    text-align: center;}
+.calendar_month_title {list-style: none; 
+                        margin: 0; 
+                        padding: 0;}
+.calendar_month_arrow {cursor: pointer;}
+.calendar_month_arrow.prev {float: left;}
+.calendar_month_arrow.next {float: right;}
+.calendar_weekdays {position: relative;
+                    margin: 0;
+                    padding: 10px 5px;
+                    background: #ddd;}
+.calendar_weekdays_name {display: inline-block; 
+                        width: 12.5%; 
+                        text-align: center;}  
+.calendar_days {margin: 0; 
+                padding: 10px 0;}
+.calendar_days_date {display: inline-block; 
+                    width: 12.65%; 
+                    padding: 5px 0;
+                    text-align: center;
+                    cursor: pointer;}
+.calendar_days_date:hover {color: #4286f4;}
+.calendar_days_date.active {background: #4286f4;}
+.calendar_days_date.active:hover {color: #000;};

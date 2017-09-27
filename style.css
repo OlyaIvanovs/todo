@@ -15,7 +15,9 @@
                 background: orange; z-index: 100;}
 .todos_add-new_warning {color: red; 
                         display: none;}
-.todos_list {position: relative;}
+.todos_list {position: relative; list-style: none;}
+.todos_list_ul {list-style: none;
+                padding: 0;}
 .todos_list_move {display: none;
                   position: absolute; 
                   top: 0; left: 0;
@@ -23,7 +25,8 @@
                   padding: 10px; 
                   background: orange;}
 
-
+.todos_li_name {display: inline;}
+.todos_li_time {display: inline; font-weight: bold; font-size: 80%; color: grey;}
 .todos_li_delete {background: orange; 
                 margin: 2px 5px; 
                 cursor: pointer;}
@@ -51,8 +54,12 @@
             cursor: pointer;}
 .week_title:hover, .week_title.active {color: green;}
 .table_week {width: 80%;}
-.table_week_day {background: green;
-                padding: 5px;}
+.table_week_day {padding: 5px; margin-bottom: 5px;}
+.table_week_day.after {background: green;}
 .table_week_day.active {background: orange;}
 .table_week_day.before {background: #c6ce9f;}
-.table_week_td {border: 1px solid black; height: 150px;}
+.table_week_day_name {display: inline-block;}
+.table_week_todos { padding: 0 10px;
+                    border: 1px solid black; 
+                    min-height: 150px;}
+.table_week_todos_list {list-style: none; padding: 0;}
