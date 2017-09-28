@@ -1,6 +1,6 @@
 .calendar {width: 210px; height: 250px;}
 .calendar_month {
-    padding: 5px; 
+    padding: 10px; 
     background: #4286f4;
     text-align: center;}
 .calendar_month_title {list-style: none; 
