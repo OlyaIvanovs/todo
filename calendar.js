@@ -15,16 +15,16 @@ var todayWeekDay = today.getDay() - 1;
 if (todayWeekDay == -1) {todayWeekDay = 6};
 var diffMonth = 0;
 var diffYear = 0;
-var newYear = todayYear + diffYear;
+var newYear = todayYear;
+var newMonth = todayMonth;
 var months = [];
 
 var monthTitle = document.getElementById("cur_month");
 monthTitle.textContent = CALENDAR.monthsArray[todayMonth] + ' ' + todayYear;
 var arrowMonth = document.getElementsByClassName('calendar_month_arrow');
+
 arrowMonth[0].onclick = function() {
-    //????
-    var prevMonthNumDays = daysInMonth(newMonth, newYear);
-    var newMonthDays = []
+    var newMonthDays = [];
     diffMonth = diffMonth - 1;
     var newMonth = todayMonth + diffMonth - diffYear*12;
     monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
@@ -37,22 +37,30 @@ arrowMonth[0].onclick = function() {
     if (newMonthFirstWeekDay == -1) {newMonthFirstWeekDay = 6};
     var newMonthNumDays = daysInMonth(newMonth, newYear);
 
-    for (var i = (newMonthFirstWeekDay); i > 0; i--) {
+    var prevMonth = newMonth - 1;
+    if (prevMonth == -1) {
+        prevMonth = 11;
+        prevYear =  newYear - 1;
+    }
+    var prevMonthNumDays = daysInMonth(newMonth, newYear);
+
+    for (var i = newMonthFirstWeekDay; i > 0; i--) {
         newMonthDays[i-1] = prevMonthNumDays - i + 1;
     }
-
+    for (var i = newMonthFirstWeekDay; i < newMonthNumDays+newMonthFirstWeekDay; i++) {
+        newMonthDays[i] = i;
+    }
+    var newMonthDaysLen = newMonthDays.length;
+    for (var i = 0; i < 42 - newMonthDaysLen; i++) {
+        newMonthDays[i+newMonthDaysLen] = i+1;
+    }
+    var calendarDaysCont = document.getElementById('calendar-days');
     var sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
     var templateCalendarDays = Handlebars.compile(sourceCalendarDays);
-    // toDosAllCont.innerHTML = templateListTodos({days: newMonthDays});
-
-
-
-    // var month = {
-    //     'date': newMonthFirstDay,
-    //     'weekDay': newMonthFirstWeekDay,
-    //     'numDays': 
-    // }
+    calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays});
 }
+
+
 arrowMonth[1].onclick = function() {
     diffMonth = diffMonth + 1;
     var newMonth = todayMonth + diffMonth - diffYear*12;
