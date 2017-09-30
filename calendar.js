@@ -1,5 +1,34 @@
-function daysInMonth(month,year) {
-    return new Date(year, month, 0).getDate();
+function daysInMonth(newYear, newMonth) {
+    var newMonthFirstDay = new Date(newYear, newMonth, 1);
+    var newMonthFirstWeekDay = newMonthFirstDay.getDay() - 1;
+    if (newMonthFirstWeekDay == -1) {newMonthFirstWeekDay = 6};
+    var newMonthNumDays = numDaysInMonth(newMonth, newYear);
+    var prevMonth = newMonth - 1;
+    var prevYear = newYear;
+    if (prevMonth == -1) {
+        prevMonth = 11;
+        prevYear =  prevYear - 1;
+    }
+    var prevMonthNumDays = numDaysInMonth(prevMonth, prevYear);
+    var newMonthDays = [];
+    for (var i = 0; i < newMonthFirstWeekDay; i++) {
+        newMonthDays[newMonthFirstWeekDay - i - 1] = prevMonthNumDays - i;
+    }
+    for (var i = 1; i < newMonthNumDays+1; i++) {
+        newMonthDays[newMonthFirstWeekDay + i - 1] = i;
+    }
+    var newMonthDaysLen = newMonthDays.length;
+    for (var i = 0; i < (42 - newMonthDaysLen); i++) {
+        newMonthDays[i+newMonthDaysLen] = i+1;
+    }
+    var calendarDaysCont = document.getElementById('calendar-days');
+    var sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
+    var templateCalendarDays = Handlebars.compile(sourceCalendarDays);
+    calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays});
+}
+
+function numDaysInMonth(month,year) {
+    return new Date(year, month+1, 0).getDate();
 }
 
 var CALENDAR = {
@@ -19,12 +48,14 @@ var newYear = todayYear;
 var newMonth = todayMonth;
 var months = [];
 
+
 var monthTitle = document.getElementById("cur_month");
 monthTitle.textContent = CALENDAR.monthsArray[todayMonth] + ' ' + todayYear;
 var arrowMonth = document.getElementsByClassName('calendar_month_arrow');
 
+daysInMonth(newYear, newMonth);
+
 arrowMonth[0].onclick = function() {
-    var newMonthDays = [];
     diffMonth = diffMonth - 1;
     var newMonth = todayMonth + diffMonth - diffYear*12;
     monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
@@ -32,32 +63,7 @@ arrowMonth[0].onclick = function() {
         diffYear = diffYear - 1;
         newYear = todayYear + diffYear;
     }
-    var newMonthFirstDay = new Date(newYear, newMonth, 1);
-    var newMonthFirstWeekDay = newMonthFirstDay.getDay() - 1;
-    if (newMonthFirstWeekDay == -1) {newMonthFirstWeekDay = 6};
-    var newMonthNumDays = daysInMonth(newMonth, newYear);
-
-    var prevMonth = newMonth - 1;
-    if (prevMonth == -1) {
-        prevMonth = 11;
-        prevYear =  newYear - 1;
-    }
-    var prevMonthNumDays = daysInMonth(newMonth, newYear);
-
-    for (var i = newMonthFirstWeekDay; i > 0; i--) {
-        newMonthDays[i-1] = prevMonthNumDays - i + 1;
-    }
-    for (var i = newMonthFirstWeekDay; i < newMonthNumDays+newMonthFirstWeekDay; i++) {
-        newMonthDays[i] = i;
-    }
-    var newMonthDaysLen = newMonthDays.length;
-    for (var i = 0; i < 42 - newMonthDaysLen; i++) {
-        newMonthDays[i+newMonthDaysLen] = i+1;
-    }
-    var calendarDaysCont = document.getElementById('calendar-days');
-    var sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
-    var templateCalendarDays = Handlebars.compile(sourceCalendarDays);
-    calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays});
+    daysInMonth(newYear, newMonth);
 }
 
 
