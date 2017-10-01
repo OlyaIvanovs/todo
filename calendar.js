@@ -1,7 +1,29 @@
+function getWeekDay(day) {
+    var weekDay = day.getDay() - 1;
+    if (weekDay == -1) {weekDay = 6};
+    return weekDay;
+}
+
+function numDaysInMonth(month,year) {
+    return new Date(year, month+1, 0).getDate();
+}
+
+function addTodayMark() {
+    if ((newMonth == todayMonth) && (newYear === todayYear)) {
+        var newMonthDays = calendarDaysCont.getElementsByClassName('calendar_days_date active');
+        for (i = 0; i < newMonthDays.length; i++) {
+            if (newMonthDays[i].textContent == todayDay) {
+                newMonthDays[i].className += " today";
+            }
+        }
+    }
+}
+
 function daysInMonth(newYear, newMonth) {
     var newMonthFirstDay = new Date(newYear, newMonth, 1);
-    var newMonthFirstWeekDay = newMonthFirstDay.getDay() - 1;
-    if (newMonthFirstWeekDay == -1) {newMonthFirstWeekDay = 6};
+    var newMonthLastDay = new Date(newYear, newMonth + 1, 0);
+    var newMonthFirstWeekDay = getWeekDay(newMonthFirstDay);
+    var newMonthLastWeekDay = getWeekDay(newMonthLastDay);
     var newMonthNumDays = numDaysInMonth(newMonth, newYear);
     var prevMonth = newMonth - 1;
     var prevYear = newYear;
@@ -10,25 +32,23 @@ function daysInMonth(newYear, newMonth) {
         prevYear =  prevYear - 1;
     }
     var prevMonthNumDays = numDaysInMonth(prevMonth, prevYear);
+    var newMonthDaysBefore = [];
     var newMonthDays = [];
+    var newMonthDaysAfter = [];
     for (var i = 0; i < newMonthFirstWeekDay; i++) {
-        newMonthDays[newMonthFirstWeekDay - i - 1] = prevMonthNumDays - i;
+        newMonthDaysBefore[newMonthFirstWeekDay - i - 1] = prevMonthNumDays - i;
     }
     for (var i = 1; i < newMonthNumDays+1; i++) {
-        newMonthDays[newMonthFirstWeekDay + i - 1] = i;
+        newMonthDays[i - 1] = i;
     }
-    var newMonthDaysLen = newMonthDays.length;
-    for (var i = 0; i < (42 - newMonthDaysLen); i++) {
-        newMonthDays[i+newMonthDaysLen] = i+1;
+    for (var i = 0; i < (6 - newMonthLastWeekDay); i++) {
+        newMonthDaysAfter[i] = i+1;
     }
-    var calendarDaysCont = document.getElementById('calendar-days');
     var sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
     var templateCalendarDays = Handlebars.compile(sourceCalendarDays);
-    calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays});
-}
-
-function numDaysInMonth(month,year) {
-    return new Date(year, month+1, 0).getDate();
+    calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays, 
+                                                    beforedays: newMonthDaysBefore,
+                                                    afterdays: newMonthDaysAfter});
 }
 
 var CALENDAR = {
@@ -36,43 +56,42 @@ var CALENDAR = {
    "monthsNumArray": ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
 }
 
+var calendarDaysCont = document.getElementById('calendar-days');
 var today = new Date();
 var todayMonth = today.getMonth();
 var todayYear = today.getFullYear();
 var todayDay = today.getDate();
-var todayWeekDay = today.getDay() - 1;
-if (todayWeekDay == -1) {todayWeekDay = 6};
-var diffMonth = 0;
-var diffYear = 0;
+var todayWeekDay = getWeekDay(today);
 var newYear = todayYear;
 var newMonth = todayMonth;
-var months = [];
-
 
 var monthTitle = document.getElementById("cur_month");
 monthTitle.textContent = CALENDAR.monthsArray[todayMonth] + ' ' + todayYear;
 var arrowMonth = document.getElementsByClassName('calendar_month_arrow');
-
 daysInMonth(newYear, newMonth);
+addTodayMark();
 
 arrowMonth[0].onclick = function() {
-    diffMonth = diffMonth - 1;
-    var newMonth = todayMonth + diffMonth - diffYear*12;
-    monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
     if (newMonth == 0) {
-        diffYear = diffYear - 1;
-        newYear = todayYear + diffYear;
+        newYear = newYear - 1;
+        newMonth = 11;
+    } else {
+        newMonth = newMonth - 1;
     }
-    daysInMonth(newYear, newMonth);
+    monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
+    daysInMonth(newYear, newMonth); 
+    addTodayMark();   
 }
 
 
 arrowMonth[1].onclick = function() {
-    diffMonth = diffMonth + 1;
-    var newMonth = todayMonth + diffMonth - diffYear*12;
-    monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
     if (newMonth == 11) {
-        diffYear = diffYear + 1;
-        newYear = todayYear + diffYear;
+        newYear = newYear + 1;
+        newMonth = 0;
+    } else {
+        newMonth = newMonth + 1;
     }
+    monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
+    daysInMonth(newYear, newMonth);
+    addTodayMark();
 }

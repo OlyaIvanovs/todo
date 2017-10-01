@@ -22,7 +22,9 @@
                     width: 12.65%; 
                     padding: 5px 0;
                     text-align: center;
-                    cursor: pointer;}
-.calendar_days_date:hover {color: #4286f4;}
-.calendar_days_date.active {background: #4286f4;}
-.calendar_days_date.active:hover {color: #000;};
+                    color: #d9dce0;}
+.calendar_days_date.active {color: #000;
+                            cursor: pointer;}
+.calendar_days_date.active:hover {color: #4286f4;}
+.calendar_days_date.today {background: #4286f4;}
+.calendar_days_date.today:hover {color: #000;};

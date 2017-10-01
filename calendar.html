@@ -27,7 +27,13 @@
     </div>
     <script id="calendar-days-template" type="text/x-handlebars-template">
         <ul class="calendar_days">
+            {{#each beforedays}}
+            <li class="calendar_days_date">{{ this }}</li>
+            {{/each}}
             {{#each days}}
+            <li class="calendar_days_date active">{{ this }}</li>
+            {{/each}}
+            {{#each afterdays}}
             <li class="calendar_days_date">{{ this }}</li>
             {{/each}}
         </ul>
