@@ -10,11 +10,29 @@ function numDaysInMonth(month,year) {
 
 function addTodayMark() {
     if ((newMonth == todayMonth) && (newYear === todayYear)) {
-        var newMonthDays = calendarDaysCont.getElementsByClassName('calendar_days_date active');
-        for (i = 0; i < newMonthDays.length; i++) {
-            if (newMonthDays[i].textContent == todayDay) {
-                newMonthDays[i].className += " today";
+        for (i = 0; i < monthDays.length; i++) {
+            if (monthDays[i].textContent == todayDay) {
+                monthDays[i].className += " today";
             }
+        }
+    }
+}
+
+function chooseDay() {
+    for (var i = 0; i < monthDays.length; i++) {
+        monthDays[i].onclick = function() {
+            for (var k = 0; k < monthDays.length; k++) {
+                var day = monthDays[k];
+                if (day.classList.contains("chosen")) {
+                    day.classList.remove("chosen");
+                }
+            }
+            var chosenDay = this.textContent;
+            this.className += " chosen";
+            var chosenDate = new Date();
+            chosenDate.setFullYear(newYear, newMonth, chosenDay);
+            chosenDateCont.textContent = chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
+            return chosenDate;
         }
     }
 }
@@ -57,6 +75,9 @@ var CALENDAR = {
 }
 
 var calendarDaysCont = document.getElementById('calendar-days');
+var monthDays = calendarDaysCont.getElementsByClassName('calendar_days_date active');
+var chosenDateCont = document.getElementById('chosen_date');
+var arrowMonth = document.getElementsByClassName('calendar_month_arrow');
 var today = new Date();
 var todayMonth = today.getMonth();
 var todayYear = today.getFullYear();
@@ -64,12 +85,14 @@ var todayDay = today.getDate();
 var todayWeekDay = getWeekDay(today);
 var newYear = todayYear;
 var newMonth = todayMonth;
+var chosenDate = today;
 
 var monthTitle = document.getElementById("cur_month");
 monthTitle.textContent = CALENDAR.monthsArray[todayMonth] + ' ' + todayYear;
-var arrowMonth = document.getElementsByClassName('calendar_month_arrow');
+
 daysInMonth(newYear, newMonth);
 addTodayMark();
+chooseDay();
 
 arrowMonth[0].onclick = function() {
     if (newMonth == 0) {
@@ -80,7 +103,8 @@ arrowMonth[0].onclick = function() {
     }
     monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
     daysInMonth(newYear, newMonth); 
-    addTodayMark();   
+    addTodayMark();  
+    // chooseDay(); 
 }
 
 
@@ -94,4 +118,5 @@ arrowMonth[1].onclick = function() {
     monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
     daysInMonth(newYear, newMonth);
     addTodayMark();
+    chooseDay();
 }

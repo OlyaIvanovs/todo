@@ -27,4 +27,9 @@
                             cursor: pointer;}
 .calendar_days_date.active:hover {color: #4286f4;}
 .calendar_days_date.today {background: #4286f4;}
-.calendar_days_date.today:hover {color: #000;};
+.calendar_days_date.today:hover {color: #000;}
+.calendar_days_date.chosen {background: #ddd;}
+.calendar_days_date.chosen:hover {color: #000; 
+                                cursor: auto;}
+
+.calendar_date {margin: 10px; font-weight: bold;}
