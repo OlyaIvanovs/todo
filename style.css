@@ -15,6 +15,11 @@
                 background: orange; z-index: 100;}
 .todos_add-new_warning {color: red; 
                         display: none;}
+.todos_add-new_date {display: inline-block; background: white; height: 20px; width: 90px;}
+.todos_add-new_delete-date {cursor: pointer; 
+                            color: red;
+                            display: inline; padding: 0 10px;}
+
 .todos_list {position: relative; list-style: none;}
 .todos_list_ul {list-style: none;
                 padding: 0;}
@@ -63,3 +68,10 @@
                     border: 1px solid black; 
                     min-height: 150px;}
 .table_week_todos_list {list-style: none; padding: 0;}
+
+/*calendar style*/
+.calendar_month {background: green;}
+.calendar_days_date.active:hover {color: green;}
+.calendar_days_date.today {background: green;}
+.calendar_days_date.chosen:hover {color: #000;}
+

@@ -149,10 +149,16 @@ function addNewTodo() {
     var newTodoAddInput = newTodoCont.getElementsByTagName('input')[0];
     var newTodoAddSelect = newTodoCont.getElementsByTagName('select')[0];
     var newTodoWarning = document.getElementById('add_todo_warning');
+    var newTodoAddDate = document.getElementById('chosen_date');
     var listTodo = document.getElementById('todo_list');
+    chosenDateCont.value = "" + CALENDAR.todayDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + CALENDAR.todayYear;
     newTodoWarning.style.display = 'none';
     newTodoAddInput.value = '';
     newTodoAddSelect.selectedIndex = 0;
+
+    newTodoAddDate.onclick = function() {
+        alert("Date");
+    }
     
     newTodoCancelButton.onclick = function() {
         newTodoCont.style.visibility = 'hidden';
@@ -343,7 +349,6 @@ function clickProjectLink() {
         };
     }
 }
-
 
 
 var projects = [{'name': 'Routine', 'id': 0, 'number': 2},

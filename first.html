@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <link rel="stylesheet" href="calendar.css">
     <link rel="stylesheet" href="style.css">
     <meta charset="utf-8">
     <script src="handlebars-v4.0.10.js"></script>
@@ -23,8 +24,34 @@
         <div id="add_todo_cont" class="todos_add-new">
             <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text"><br><br>
             <b>Project:</b>
-            <p id="projects-select" style="display: inline;"><p>
+            <p id="projects-select" style="display: inline;"></p><br><br>
+            <b id="add_todo">Date:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+            <input id="chosen_date">
+            <p class="todos_add-new_delete-date">&#10008;</p><br><br>
+            <div>
+                <div class="calendar">
+                    <div class="calendar_month"> 
+                        <ul class="calendar_month_title">
+                            <li class="calendar_month_arrow prev">&#10094;</li>
+                            <li class="calendar_month_arrow next">&#10095;</li>
+                            <li><b id="cur_month"></b></li>
+                        </ul>
+                    </div>
+                    <ul class="calendar_weekdays">
+                      <li class="calendar_weekdays_name">Mo</li>
+                      <li class="calendar_weekdays_name">Tu</li>
+                      <li class="calendar_weekdays_name">We</li>
+                      <li class="calendar_weekdays_name">Th</li>
+                      <li class="calendar_weekdays_name">Fr</li>
+                      <li class="calendar_weekdays_name">Sa</li>
+                      <li class="calendar_weekdays_name">Su</li>
+                    </ul>
+                    <div id="calendar-days"></div>
+                </div>
+                <div class="calendar_date" id="chosen_date"></div>
+            </div>
             <button>Add</button> <button>Cancel</button>
+            <br><br>
             <p class="todos_add-new_warning" id="add_todo_warning">No name. Please add a new one.</b>
         </div>
         <div class="todos_list">
@@ -173,6 +200,20 @@
             {{/each}}
         </ul>
     </script>
+    <script id="calendar-days-template" type="text/x-handlebars-template">
+        <ul class="calendar_days">
+            {{#each beforedays}}
+            <li class="calendar_days_date">{{ this }}</li>
+            {{/each}}
+            {{#each days}}
+            <li class="calendar_days_date active">{{ this }}</li>
+            {{/each}}
+            {{#each afterdays}}
+            <li class="calendar_days_date">{{ this }}</li>
+            {{/each}}
+        </ul>
+    </script>
     <script src="script.js"></script>
+    <script src="calendar.js"></script>
 </body>
 </html>

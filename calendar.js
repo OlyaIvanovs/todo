@@ -1,3 +1,9 @@
+Calendar = {
+
+}
+
+
+
 function getWeekDay(day) {
     var weekDay = day.getDay() - 1;
     if (weekDay == -1) {weekDay = 6};
@@ -31,7 +37,8 @@ function chooseDay() {
             this.className += " chosen";
             var chosenDate = new Date();
             chosenDate.setFullYear(newYear, newMonth, chosenDay);
-            chosenDateCont.textContent = chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
+            // chosenDateCont.textContent = chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
+            chosenDateCont.value = "" + chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
             return chosenDate;
         }
     }
@@ -70,8 +77,18 @@ function daysInMonth(newYear, newMonth) {
 }
 
 var CALENDAR = {
-   "monthsArray" : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-   "monthsNumArray": ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+    monthsArray : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    monthsNumArray: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+    today: today,
+    todayYear: todayYear,
+    todayDay: todayDay,
+    todayMonth: todayMonth,
+    
+    daysInMonth: function () {
+
+    }, 
+
+
 }
 
 var calendarDaysCont = document.getElementById('calendar-days');
@@ -104,7 +121,7 @@ arrowMonth[0].onclick = function() {
     monthTitle.textContent = CALENDAR.monthsArray[newMonth] + ' ' + newYear;
     daysInMonth(newYear, newMonth); 
     addTodayMark();  
-    // chooseDay(); 
+    chooseDay(); 
 }
 
 
