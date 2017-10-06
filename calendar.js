@@ -1,11 +1,5 @@
-Calendar = {
-
-}
-
-
-
 function getWeekDay(day) {
-    var weekDay = day.getDay() - 1;
+    let weekDay = day.getDay() - 1;
     if (weekDay == -1) {weekDay = 6};
     return weekDay;
 }
@@ -16,7 +10,7 @@ function numDaysInMonth(month,year) {
 
 function addTodayMark() {
     if ((newMonth == todayMonth) && (newYear === todayYear)) {
-        for (i = 0; i < monthDays.length; i++) {
+        for (let i = 0; i < monthDays.length; i++) {
             if (monthDays[i].textContent == todayDay) {
                 monthDays[i].className += " today";
             }
@@ -25,10 +19,10 @@ function addTodayMark() {
 }
 
 function chooseDay() {
-    for (var i = 0; i < monthDays.length; i++) {
+    for (let i = 0; i < monthDays.length; i++) {
         monthDays[i].onclick = function() {
-            for (var k = 0; k < monthDays.length; k++) {
-                var day = monthDays[k];
+            for (let k = 0; k < monthDays.length; k++) {
+                let day = monthDays[k];
                 if (day.classList.contains("chosen")) {
                     day.classList.remove("chosen");
                 }
@@ -45,32 +39,32 @@ function chooseDay() {
 }
 
 function daysInMonth(newYear, newMonth) {
-    var newMonthFirstDay = new Date(newYear, newMonth, 1);
-    var newMonthLastDay = new Date(newYear, newMonth + 1, 0);
-    var newMonthFirstWeekDay = getWeekDay(newMonthFirstDay);
-    var newMonthLastWeekDay = getWeekDay(newMonthLastDay);
-    var newMonthNumDays = numDaysInMonth(newMonth, newYear);
-    var prevMonth = newMonth - 1;
-    var prevYear = newYear;
+    let newMonthFirstDay = new Date(newYear, newMonth, 1);
+    let newMonthLastDay = new Date(newYear, newMonth + 1, 0);
+    let newMonthFirstWeekDay = getWeekDay(newMonthFirstDay);
+    let newMonthLastWeekDay = getWeekDay(newMonthLastDay);
+    let newMonthNumDays = numDaysInMonth(newMonth, newYear);
+    let prevMonth = newMonth - 1;
+    let prevYear = newYear;
     if (prevMonth == -1) {
         prevMonth = 11;
         prevYear =  prevYear - 1;
     }
-    var prevMonthNumDays = numDaysInMonth(prevMonth, prevYear);
-    var newMonthDaysBefore = [];
-    var newMonthDays = [];
-    var newMonthDaysAfter = [];
-    for (var i = 0; i < newMonthFirstWeekDay; i++) {
+    let prevMonthNumDays = numDaysInMonth(prevMonth, prevYear);
+    let newMonthDaysBefore = [];
+    let newMonthDays = [];
+    let newMonthDaysAfter = [];
+    for (let i = 0; i < newMonthFirstWeekDay; i++) {
         newMonthDaysBefore[newMonthFirstWeekDay - i - 1] = prevMonthNumDays - i;
     }
-    for (var i = 1; i < newMonthNumDays+1; i++) {
+    for (let i = 1; i < newMonthNumDays+1; i++) {
         newMonthDays[i - 1] = i;
     }
-    for (var i = 0; i < (6 - newMonthLastWeekDay); i++) {
+    for (let i = 0; i < (6 - newMonthLastWeekDay); i++) {
         newMonthDaysAfter[i] = i+1;
     }
-    var sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
-    var templateCalendarDays = Handlebars.compile(sourceCalendarDays);
+    let sourceCalendarDays   = document.getElementById('calendar-days-template').innerHTML;
+    let templateCalendarDays = Handlebars.compile(sourceCalendarDays);
     calendarDaysCont.innerHTML = templateCalendarDays({days: newMonthDays, 
                                                     beforedays: newMonthDaysBefore,
                                                     afterdays: newMonthDaysAfter});
