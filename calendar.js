@@ -32,7 +32,7 @@ function chooseDay() {
             var chosenDate = new Date();
             chosenDate.setFullYear(newYear, newMonth, chosenDay);
             // chosenDateCont.textContent = chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
-            chosenDateCont.value = "" + chosenDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + newYear;
+            chosenDateCont.value = "" + chosenDay + ' ' + CALENDAR.monthsArray[newMonth] + ' ' + newYear;
             return chosenDate;
         }
     }
@@ -131,3 +131,6 @@ arrowMonth[1].onclick = function() {
     addTodayMark();
     chooseDay();
 }
+
+
+//expose "ChosenDate"

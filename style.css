@@ -70,6 +70,8 @@
 .table_week_todos_list {list-style: none; padding: 0;}
 
 /*calendar style*/
+.calendar_wrapper {height: 0;
+                    visibility: hidden;}
 .calendar_month {background: green;}
 .calendar_days_date.active:hover {color: green;}
 .calendar_days_date.today {background: green;}

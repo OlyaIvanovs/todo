@@ -13,6 +13,14 @@ function hideBlocks() {
     }
 }
 
+function getYMDDate(date) {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    var dateStr = "" + day + "." + month + "." + year;
+    return dateStr;
+}
+
 // to increase with sign = 1 or to decrease with sign = -1
 function changeNumberProjects(pr_id, sign) {
     for (var i = 0; i < projects.length; i++) {
@@ -151,13 +159,14 @@ function addNewTodo() {
     var newTodoWarning = document.getElementById('add_todo_warning');
     var newTodoAddDate = document.getElementById('chosen_date');
     var listTodo = document.getElementById('todo_list');
+    var calendarWrap = document.getElementsByClassName('calendar_wrapper')[0];
     chosenDateCont.value = "" + CALENDAR.todayDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + CALENDAR.todayYear;
     newTodoWarning.style.display = 'none';
     newTodoAddInput.value = '';
     newTodoAddSelect.selectedIndex = 0;
 
     newTodoAddDate.onclick = function() {
-        alert("Date");
+        calendarWrap.style.cssText = "height: auto; visibility: visible;";
     }
     
     newTodoCancelButton.onclick = function() {
@@ -169,6 +178,9 @@ function addNewTodo() {
         var listTodo = document.getElementById('todo_list');
         toDo.name = newTodoAddInput.value;
         toDo.status = 'new';
+        //!!!!ChosenDAte global variable from calendar
+        toDo.date = chosenDate;
+        var dateStr = getYMDDate(chosenDate);
         toDo.project_id = newTodoIdProject.split('_').slice(-1)[0];
         changeNumberProjects(toDo.project_id, 1);
         if (!toDo.name) {
@@ -189,7 +201,7 @@ function addNewTodo() {
                 itemTodo.appendChild(itemTodoCheckbox);
                 itemTodo.appendChild(document.createTextNode("NEW!  " + toDo.name));
                 var itemTodoDelete = document.createElement('button');
-                itemTodoDelete.appendChild(document.createTextNode('Delete'));
+                itemTodoDelete.innerHTML = "&#10008";
                 itemTodoDelete.className = "todos_li_delete";
                 itemTodo.appendChild(itemTodoDelete);
                 var itemTodoMore = document.createElement('div');
@@ -356,7 +368,7 @@ var projects = [{'name': 'Routine', 'id': 0, 'number': 2},
 var projectId = 2;
 var toDoId = 4;
 var todosdate = new Date('2017-09-26');
-var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate}, 
+var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate, 'out'}, 
             {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0, 'date': todosdate}, 
             {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1, 'date': todosdate},
             {'name': 'Thing 111','status': 'new', 'id': 3, 'project_id': 1}];
