@@ -1,5 +1,10 @@
 document.onclick = hideBlocks;
 
+var today = new Date();
+var todayMonth = today.getMonth();
+var todayYear = today.getFullYear();
+var todayDay = today.getDate();
+
 function hideBlocks() {
     for (var k = 0; k < todoOptionsBlocks.length; k++) {
         if (todoOptionsBlocks[k].hasAttribute('show')) {
@@ -160,7 +165,20 @@ function addNewTodo() {
     var newTodoAddDate = document.getElementById('chosen_date');
     var listTodo = document.getElementById('todo_list');
     var calendarWrap = document.getElementsByClassName('calendar_wrapper')[0];
-    chosenDateCont.value = "" + CALENDAR.todayDay + ' ' + CALENDAR.monthsArray[todayMonth] + ' ' + CALENDAR.todayYear;
+    var dateDelete = document.getElementsByClassName('todos_add-new_delete-date')[0];
+    var calendar = MyCalendar();
+    var chosenDateCont = calendar.chosenDateCont();
+    chosenDateCont.value = "" + todayDay + ' ' + monthsArray[todayMonth] + ' ' + todayYear;
+    var noDate = false;
+    dateDelete.onclick = function() {
+        noDate = true;
+        chosenDateCont.value = "";
+    }
+    calendarWrap.onclick = function() {
+        if (chosenDateCont.value) {
+            noDate = false;
+        }
+    }
     newTodoWarning.style.display = 'none';
     newTodoAddInput.value = '';
     newTodoAddSelect.selectedIndex = 0;
@@ -171,16 +189,17 @@ function addNewTodo() {
     
     newTodoCancelButton.onclick = function() {
         newTodoCont.style.visibility = 'hidden';
+        calendarWrap.style.cssText = "height: 0; visibility: hiddens;";
     }
 
     newTodoAddButton.onclick =  function() {
-        var newTodoIdProject = newTodoAddSelect[newTodoAddSelect.selectedIndex].id;
+        let newTodoIdProject = newTodoAddSelect[newTodoAddSelect.selectedIndex].id;
         var listTodo = document.getElementById('todo_list');
         toDo.name = newTodoAddInput.value;
         toDo.status = 'new';
-        //!!!!ChosenDAte global variable from calendar
-        toDo.date = chosenDate;
-        var dateStr = getYMDDate(chosenDate);
+        if (!noDate) {
+           toDo.date = calendar.chosenDate(); 
+        }
         toDo.project_id = newTodoIdProject.split('_').slice(-1)[0];
         changeNumberProjects(toDo.project_id, 1);
         if (!toDo.name) {
@@ -189,17 +208,18 @@ function addNewTodo() {
             toDo.id = toDoId;
             toDoId++;
             newTodoCont.style.visibility = 'hidden';
+            calendarWrap.style.cssText = "height: 0; visibility: hidden;";
 
-            var selectedProjects = document.getElementsByClassName('projects_li active');
-            if (selectedProjects[0].id == 'see_all_todos' || 
-                (selectedProjects[0].getAttribute('project_id') == toDo.project_id)) {
+            let selectedProject = document.getElementsByClassName('projects_li active')[0];
+            if (selectedProject.id == 'see_all_todos' || 
+                (selectedProject.getAttribute('project_id') == toDo.project_id)) {
             
                 var itemTodo = document.createElement('li');
                 itemTodo.setAttribute("todo_id", toDo.id);
                 var itemTodoCheckbox = document.createElement('input');
                 itemTodoCheckbox.type = "checkbox";
                 itemTodo.appendChild(itemTodoCheckbox);
-                itemTodo.appendChild(document.createTextNode("NEW!  " + toDo.name));
+                itemTodo.appendChild(document.createTextNode(toDo.name));
                 var itemTodoDelete = document.createElement('button');
                 itemTodoDelete.innerHTML = "&#10008";
                 itemTodoDelete.className = "todos_li_delete";
@@ -368,7 +388,7 @@ var projects = [{'name': 'Routine', 'id': 0, 'number': 2},
 var projectId = 2;
 var toDoId = 4;
 var todosdate = new Date('2017-09-26');
-var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate, 'out'}, 
+var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate}, 
             {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0, 'date': todosdate}, 
             {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1, 'date': todosdate},
             {'name': 'Thing 111','status': 'new', 'id': 3, 'project_id': 1}];
@@ -488,10 +508,6 @@ var weekDays = document.getElementsByClassName('table_week_td');
 var prevWeek = document.getElementById("prev_week");
 var nextWeek = document.getElementById("next_week");
 var nextWeek = document.getElementById("cur_week");
-var today = new Date();
-var todayMonth = today.getMonth();
-var todayYear = today.getFullYear();
-var todayDay = today.getDate();
 var todayWeekDay = today.getDay() - 1;
 if (todayWeekDay == -1) {todayWeekDay = 6};
 var weekDiff = 0;
