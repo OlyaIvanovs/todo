@@ -151,25 +151,25 @@ function changeTodo(optionsBlock, showAll=false) {
 
 //create new task
 function addNewTodo() {
-    var toDo = {};
+    let toDo = {};
     toDos.push(toDo);
 
-    var newTodoCont = document.getElementById('add_todo_cont');
+    let newTodoCont = document.getElementById('add_todo_cont');
     newTodoCont.style.visibility = 'visible';
 
-    var newTodoAddButton = newTodoCont.getElementsByTagName('button')[0];
-    var newTodoCancelButton = newTodoCont.getElementsByTagName('button')[1];
-    var newTodoAddInput = newTodoCont.getElementsByTagName('input')[0];
-    var newTodoAddSelect = newTodoCont.getElementsByTagName('select')[0];
-    var newTodoWarning = document.getElementById('add_todo_warning');
-    var newTodoAddDate = document.getElementById('chosen_date');
-    var listTodo = document.getElementById('todo_list');
-    var calendarWrap = document.getElementsByClassName('calendar_wrapper')[0];
-    var dateDelete = document.getElementsByClassName('todos_add-new_delete-date')[0];
-    var calendar = MyCalendar();
-    var chosenDateCont = calendar.chosenDateCont();
+    let newTodoAddButton = newTodoCont.getElementsByTagName('button')[0];
+    let newTodoCancelButton = newTodoCont.getElementsByTagName('button')[1];
+    let newTodoAddInput = newTodoCont.getElementsByTagName('input')[0];
+    let newTodoAddSelect = newTodoCont.getElementsByTagName('select')[0];
+    let newTodoWarning = document.getElementById('add_todo_warning');
+    let newTodoAddDate = document.getElementById('chosen_date');
+    let listTodo = document.getElementById('todo_list');
+    let calendarWrap = document.getElementsByClassName('calendar_wrapper')[0];
+    let dateDelete = document.getElementsByClassName('todos_add-new_delete-date')[0];
+    let calendar = MyCalendar();
+    let chosenDateCont = calendar.chosenDateCont();
     chosenDateCont.value = "" + todayDay + ' ' + monthsArray[todayMonth] + ' ' + todayYear;
-    var noDate = false;
+    let noDate = false;
     dateDelete.onclick = function() {
         noDate = true;
         chosenDateCont.value = "";
@@ -199,6 +199,7 @@ function addNewTodo() {
         toDo.status = 'new';
         if (!noDate) {
            toDo.date = calendar.chosenDate(); 
+           toDo.showed_date = getYMDDate(toDo.date);
         }
         toDo.project_id = newTodoIdProject.split('_').slice(-1)[0];
         changeNumberProjects(toDo.project_id, 1);
@@ -213,31 +214,24 @@ function addNewTodo() {
             let selectedProject = document.getElementsByClassName('projects_li active')[0];
             if (selectedProject.id == 'see_all_todos' || 
                 (selectedProject.getAttribute('project_id') == toDo.project_id)) {
-            
-                var itemTodo = document.createElement('li');
+                let itemTodo = document.createElement('li');
                 itemTodo.setAttribute("todo_id", toDo.id);
-                var itemTodoCheckbox = document.createElement('input');
-                itemTodoCheckbox.type = "checkbox";
-                itemTodo.appendChild(itemTodoCheckbox);
-                itemTodo.appendChild(document.createTextNode(toDo.name));
-                var itemTodoDelete = document.createElement('button');
-                itemTodoDelete.innerHTML = "&#10008";
-                itemTodoDelete.className = "todos_li_delete";
-                itemTodo.appendChild(itemTodoDelete);
-                var itemTodoMore = document.createElement('div');
-                itemTodoMore.className = "todo_li_more";
-                itemTodo.appendChild(itemTodoMore);
                 listTodo.appendChild(itemTodo);
 
-                var source   = document.getElementById('todo_more_template').innerHTML;
-                var template = Handlebars.compile(source);
-                itemTodoMore.innerHTML = template();
+                let source   = document.getElementById('todo_template').innerHTML;
+                let template = Handlebars.compile(source);
+                console.log(toDo.date);
+                console.log(toDo.date);
+                itemTodo.innerHTML = template(
+                    {id: toDo.id, name: toDo.name, date: toDo.date, showed_date: toDo.showed_date});
 
-                showMoreLinks(itemTodoMore.getElementsByClassName('todo_li_more_link'));
+                let itemTodoDelete = itemTodo.getElementsByClassName('todos_li_delete')[0];
+                let itemTodoCheckbox = itemTodo.getElementsByTagName('input')[0];
+                showMoreLinks(itemTodo.getElementsByClassName('todo_li_more_link'));
                 changeTodo(itemTodo.getElementsByClassName('todo_li_more_options')[0]);
 
                 itemTodoDelete.onclick = function() {
-                    for (var k = 0; k < toDos.length; k++) {
+                    for (let k = 0; k < toDos.length; k++) {
                         if (toDos[k].id == toDo.id) {
                             toDos.splice(k, 1);
                             changeNumberProjects(toDo.project_id, -1);
@@ -248,17 +242,17 @@ function addNewTodo() {
                 };
 
                 itemTodoCheckbox.onclick = function() {
-                    var doneTodo = this.parentElement;
+                    let doneTodo = this.parentElement;
                     toDo.status = (toDo.status == 'new'? 'done': 'new');
 
                     if (this.checked) {
                         doneTodo.removeChild(doneTodo.getElementsByTagName('button')[0]);
-                        var doneText = document.createElement('b');
+                        let doneText = document.createElement('b');
                         doneText.appendChild(document.createTextNode(' DONE!'));
                         doneText.style.color = 'green';
                         doneTodo.appendChild(doneText);
                     } else {
-                        var itemTodoDelete = document.createElement('button');
+                        let itemTodoDelete = document.createElement('button');
                         itemTodoDelete.appendChild(document.createTextNode('Delete'));
                         doneTodo.appendChild(itemTodoDelete);
                         itemTodoDelete.className = "todos_li_delete";
@@ -388,9 +382,10 @@ var projects = [{'name': 'Routine', 'id': 0, 'number': 2},
 var projectId = 2;
 var toDoId = 4;
 var todosdate = new Date('2017-09-26');
-var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate}, 
-            {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0, 'date': todosdate}, 
-            {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1, 'date': todosdate},
+var showed_date = getYMDDate(todosdate);
+var toDos = [{'name': 'Thing 1','status': 'new', 'id': 0, 'project_id': 0, 'date': todosdate, 'showed_date': showed_date}, 
+            {'name' : 'Thing2', 'status': 'new', 'id': 1, 'project_id': 0, 'date': todosdate, 'showed_date': showed_date}, 
+            {'name': 'Thing 3', 'status': 'done', 'id': 2, 'project_id': 1, 'date': todosdate, 'showed_date': showed_date},
             {'name': 'Thing 111','status': 'new', 'id': 3, 'project_id': 1}];
 var toDosDone = [{'name': 'Thing 3','status': 'done', 'id': 2, 'project_id': 1}]; 
 

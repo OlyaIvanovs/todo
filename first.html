@@ -25,9 +25,11 @@
             <b>Name:&nbsp;&nbsp;&nbsp;&nbsp;</b><input type="text"><br><br>
             <b>Project:</b>
             <p id="projects-select" style="display: inline;"></p><br><br>
-            <b id="add_todo">Date:&nbsp;&nbsp;&nbsp;&nbsp;</b>
-            <input id="chosen_date">
-            <p class="todos_add-new_delete-date">&#10008;</p><br><br>
+            <p>
+                <b id="add_todo">Date:&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                <input id="chosen_date">
+                <b class="todos_add-new_delete-date">&#10008;</b>
+            </p>
             <div class="calendar_wrapper" style="height: 0; visibility: hidden;">
                 <div class="calendar">
                     <div class="calendar_month"> 
@@ -133,8 +135,8 @@
     <script id="list-todos-template" type="text/x-handlebars-template"> 
         <ul id="todo_list" class="todos_list_ul">  
         {{#each toDos}}
-        <li todo_id="{{id}}">
             {{#if_eq status 'new'}}
+            <li todo_id="{{id}}">
                 <input type="checkbox">
                 <p class="todos_li_name">{{name}}</p>
                 <button class="todos_li_delete">&#10008;</button>
@@ -152,14 +154,16 @@
                     </div>
                 </div>
                 {{#if date}}
-                <p class="todos_li_time">{{date}}</p>
+                <p class="todos_li_time">{{showed_date}}</p>
                 {{/if}}
+            </li>
             {{/if_eq}}
             {{#if_eq status 'done'}}
+            <li todo_id="{{id}}" class="todo_list_item done">
                 <input checked type="checkbox">{{name}}
                 <b style="color: green;">&nbsp;DONE!</b>
-            {{/if_eq}}
-        </li>
+            </li>
+            {{/if_eq}}    
         {{/each}}
         </ul>
     </script>
@@ -179,6 +183,27 @@
             <option id="id_project_{{id}}">{{name}}</option>
             {{/each}}
         </select>
+    </script>
+    <script id="todo_template" type="text/x-handlebars-template">
+        <input type="checkbox">
+        <p class="todos_li_name">{{name}}</p>
+        <button class="todos_li_delete">&#10008;</button>
+        <div class="todo_li_more">
+            <b class="todo_li_more_link">...</b>
+            <div class="todo_li_more_options">
+                <ul class="todo_li_more_options_list">
+                    <li class="todo_li_more_options_item" id="todo_edit_{{id}}">
+                        Edit task
+                    </li>
+                    <li class="todo_li_more_options_item" id="todo_move_{{id}}">
+                        Move to another project
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {{#if date}}
+        <p class="todos_li_time">{{showed_date}}</p>
+        {{/if}}
     </script>
     <script id="todo_more_template" type="text/x-handlebars-template">
         <b class="todo_li_more_link">...</b>
